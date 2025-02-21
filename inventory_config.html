@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inventory Configuration</title>
+  <style>
+  
+  body {
+  background-image: url('pic2sauce.png');
+  background-size: cover; /* Ensures the image covers the entire screen */
+  background-position: center; /* Keeps the image centered */
+  background-attachment: scroll; /* Allows the background to move as you scroll */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  background-color: rgba(245, 245, 220, 0.8); /* Light beige with 80% opacity */
+}
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .navbar {
+      background-color: #333;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .navbar a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 20px;
+      text-decoration: none;
+    }
+    .navbar a:hover {
+      background-color: #575757;
+    }
+    .stock-config {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+    }
+    .stock-settings {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    .stock-item {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .stock-input-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input[type="number"] {
+      width: 60px;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    
+    
+* {
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+    font-size: 14px; /* Adjust font size if needed */
+  }
+  
+  /* You can also target other elements here for mobile adjustments */
+  .container {
+    width: 100%;
+    padding: 0;
+  }
+
+  /* Example for images */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <div class="navbar">
+    <a href="index.html">Home</a>
+    <a href="inventory_config.html">Inventory Configuration</a>
+    <a href="sauce-inventory-tracker.html">Inventory Tracker</a>
+    <a href="market_history.html">Market History</a>
+    <a href="analytics_dashboards.html">Analytics & Dashboards</a>
+  </div>
+
+  <!-- Inventory Configuration Section -->
+  <div class="stock-config">
+    <h2>Inventory Configuration</h2>
+    <div class="stock-settings">
+      <div class="stock-item">
+        <h4>Mellow Jalapeño</h4>
+        <div class="stock-input-group">
+          <label>Initial Stock:</label>
+          <!-- Default value is 24 -->
+          <input type="number" class="stock-input" data-flavor="Mellow Jalapeño" value="24">
+        </div>
+      </div>
+      <div class="stock-item">
+        <h4>Original Peri Peri</h4>
+        <div class="stock-input-group">
+          <label>Initial Stock:</label>
+          <input type="number" class="stock-input" data-flavor="Original Peri Peri" value="24">
+        </div>
+      </div>
+      <div class="stock-item">
+        <h4>Zesty Habanero</h4>
+        <div class="stock-input-group">
+          <label>Initial Stock:</label>
+          <input type="number" class="stock-input" data-flavor="Zesty Habanero" value="24">
+        </div>
+      </div>
+      <div class="stock-item">
+        <h4>Extra Hot</h4>
+        <div class="stock-input-group">
+          <label>Initial Stock:</label>
+          <input type="number" class="stock-input" data-flavor="Extra Hot" value="24">
+        </div>
+      </div>
+    </div>
+    <button onclick="updateStockLevels()">Update Stock Configuration</button>
+  </div>
+
+  <script>
+    // On page load, populate the inputs with any saved configuration; default is 24.
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.stock-input').forEach(input => {
+        const flavor = input.dataset.flavor;
+        const savedValue = localStorage.getItem(`stockConfig_${flavor}`);
+        if (savedValue !== null) {
+          input.value = savedValue;
+        }
+      });
+    });
+
+    // Update stock configuration in localStorage and update the "inventory" object.
+    function updateStockLevels() {
+      const stockInputs = document.querySelectorAll('.stock-input');
+      // Save individual stockConfig keys.
+      stockInputs.forEach(input => {
+        const flavor = input.dataset.flavor;
+        const newStock = parseInt(input.value);
+        if (!isNaN(newStock) && newStock >= 0) {
+          localStorage.setItem(`stockConfig_${flavor}`, newStock);
+        }
+      });
+      
+      // Update the "inventory" object in localStorage.
+      let inventoryObj;
+      const savedInventory = localStorage.getItem('inventory');
+      if (savedInventory) {
+        inventoryObj = JSON.parse(savedInventory);
+      } else {
+        // If none exists, start with default values of 24.
+        inventoryObj = {
+          "Mellow Jalapeño": { stock: 24, price: 95 },
+          "Original Peri Peri": { stock: 24, price: 95 },
+          "Zesty Habanero": { stock: 24, price: 95 },
+          "Extra Hot": { stock: 24, price: 95 }
+        };
+      }
+      Object.keys(inventoryObj).forEach(flavor => {
+        const newStock = localStorage.getItem(`stockConfig_${flavor}`);
+        if (newStock !== null) {
+          inventoryObj[flavor].stock = parseInt(newStock);
+        }
+      });
+      localStorage.setItem('inventory', JSON.stringify(inventoryObj));
+      
+      alert('Stock configuration updated successfully!');
+    }
+  </script>
+</body>
+</html>

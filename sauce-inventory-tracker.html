@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sauce Inventory Tracker</title>
+  <!-- Include jsPDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Include Noty CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css" />
+  <!-- Include Noty JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
+  <link rel="stylesheet" href="css_style.css">
+
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <div class="navbar">
+    <a href="index.html">Home</a>
+    <a href="inventory_config.html">Inventory Configuration</a>
+    <a href="sauce-inventory-tracker.html">Inventory Tracker</a>
+    <a href="market_history.html">Market History</a>
+    <a href="analytics_dashboards.html">Analytics & Dashboards</a>
+  </div>
+
+  <!-- Main Tracker Content -->
+<h1>Sauce Inventory Tracker</h1>
+<!-- Market Details -->
+<div id="dashboard">
+  <div class="market-details">
+    <div class="form-group">
+      <label for="marketName"><strong>Market Name:</strong></label>
+      <input type="text" id="marketName" placeholder="Enter market name" />
+      
+      <label for="marketDate"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date:</strong></label>
+      <input type="date" id="marketDate" />
+    </div>
+
+    <div class="form-group">
+      <label for="marketSP"><strong>Salesperson:</strong></label>
+      <input type="text" id="marketSP" placeholder="Enter salesperson name" />
+    </div>
+  </div>
+</div>
+
+    <!-- Single Bottle Sale -->
+    <div class="section">
+      <h2>Single Bottle Sale (R95)</h2>
+      <div class="flavor-buttons">
+        <button class="flavor-button" id="mellow-btn" onclick="logSale('Mellow Jalapeño')">
+          <img src="mellow.jpg" alt="Mellow Jalapeño" />
+          Mellow Jalapeño
+        </button>
+        <button class="flavor-button" id="original-btn" onclick="logSale('Original Peri Peri')">
+          <img src="periperi.jpg" alt="Original Peri Peri" />
+          Original Peri Peri
+        </button>
+        <button class="flavor-button" id="zesty-btn" onclick="logSale('Zesty Habanero')">
+          <img src="zesty.jpg" alt="Zesty Habanero" />
+          Zesty Habanero
+        </button>
+        <button class="flavor-button" id="extra-btn" onclick="logSale('Extra Hot')">
+          <img src="xhot.jpg" alt="Extra Hot" />
+          Extra Hot
+        </button>
+      </div>
+    </div>
+
+    <!-- Two-Bottle Promotion -->
+    <div class="section">
+      <h2>Two-Bottle Promotion (R180)</h2>
+      <div class="dropdown-group">
+        <select id="promoFlavor1">
+          <option value="Mellow Jalapeño">Mellow Jalapeño</option>
+          <option value="Original Peri Peri">Original Peri Peri</option>
+          <option value="Zesty Habanero">Zesty Habanero</option>
+          <option value="Extra Hot">Extra Hot</option>
+        </select>
+        <select id="promoFlavor2">
+          <option value="Mellow Jalapeño">Mellow Jalapeño</option>
+          <option value="Original Peri Peri">Original Peri Peri</option>
+          <option value="Zesty Habanero">Zesty Habanero</option>
+          <option value="Extra Hot">Extra Hot</option>
+        </select>
+      </div>
+      <button onclick="logPromotion()">Apply Two-Bottle Promotion</button>
+    </div>
+
+    <!-- Custom Gift Set -->
+    <div class="section">
+      <h2>Custom Gift Set (R200)</h2>
+      <div class="dropdown-group">
+        <select id="giftFlavor1">
+          <option value="Mellow Jalapeño">Mellow Jalapeño</option>
+          <option value="Original Peri Peri">Original Peri Peri</option>
+          <option value="Zesty Habanero">Zesty Habanero</option>
+          <option value="Extra Hot">Extra Hot</option>
+        </select>
+        <select id="giftFlavor2">
+          <option value="Mellow Jalapeño">Mellow Jalapeño</option>
+          <option value="Original Peri Peri">Original Peri Peri</option>
+          <option value="Zesty Habanero">Zesty Habanero</option>
+          <option value="Extra Hot">Extra Hot</option>
+        </select>
+      </div>
+      <button onclick="createGiftSet()">Create Custom Gift Set</button>
+    </div>
+
+    <!-- Prepacked Gift Sets -->
+    <div class="section">
+      <h2>Prepacked Gift Sets (R200)</h2>
+      <div class="prepacked-gift-sets">
+        <div class="prepacked-gift-set" onclick="createPrepackedGiftSet('Mellow Jalapeño', 'Original Peri Peri')">
+          <h4>Mellow Jalapeño + Original Peri Peri</h4>
+          <p>Click to create this gift set</p>
+        </div>
+        <div class="prepacked-gift-set" onclick="createPrepackedGiftSet('Mellow Jalapeño', 'Zesty Habanero')">
+          <h4>Mellow Jalapeño + Zesty Habanero</h4>
+          <p>Click to create this gift set</p>
+        </div>
+        <div class="prepacked-gift-set" onclick="createPrepackedGiftSet('Original Peri Peri', 'Extra Hot')">
+          <h4>Original Peri Peri + Extra Hot</h4>
+          <p>Click to create this gift set</p>
+        </div>
+        <div class="prepacked-gift-set" onclick="createPrepackedGiftSet('Zesty Habanero', 'Extra Hot')">
+          <h4>Zesty Habanero + Extra Hot</h4>
+          <p>Click to create this gift set</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Sales Dashboard -->
+    <h2>Live Sales Dashboard</h2>
+    <div class="dashboard-grid">
+      <div class="metric">
+        <h4>Total Bottles Sold</h4>
+        <div id="totalBottles">0</div>
+      </div>
+      <div class="metric">
+        <h4>Total Sales Amount</h4>
+        <div id="totalSales">R0</div>
+        <!-- Add Cash Sales Button and Input -->
+        <button id="cashSalesBtn" onclick="toggleCashSalesInput()" style="margin-top: 34px;">Cash Sales</button>
+        <div id="cashSalesInput" style="display: none; margin-top: 10px;">
+          <label for="cashAmount">Cash Amount:</label>
+          <input type="number" id="cashAmount" placeholder="Enter cash sales" />
+          <button onclick="logCashSales()" style="margin-top: 18px;">Add Cash Sales</button>
+        </div>
+      </div>
+      <div class="metric">
+        <h4>Remaining Stock</h4>
+        <ul id="stockList"></ul>
+      </div>
+    </div>
+
+    <button onclick="generatePdf()" id="generatePdfBtn">Generate PDF Report</button>
+    <button onclick="resetInventory()" id="resetBtn">Reset Inventory</button>
+    <button onclick="voidLastTransaction()" id="voidBtn" style="margin-top: 10px; margin-left: 10px;background-color: #FFA500;">Void Last Transaction</button>
+  </div>
+
+  <script src="sauce_inventory.js"></script>
+</body>
+</html>
